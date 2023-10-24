@@ -1,0 +1,100 @@
+import discord
+from discord.ext import commands
+import random
+import requests
+import os
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix='$', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"Hai fatto l\\'accesso come {bot.user}")
+
+@bot.command()
+async def ciao(ctx):
+    await ctx.send(f'Ciao! Sono un bot {bot.user}!')
+
+@bot.command()
+async def heh(ctx, count_heh=5):
+    await ctx.send("he" * count_heh)
+
+@bot.command()
+async def rand(ctx):
+    await ctx.send(random.randint(1, 10))
+
+@bot.command()
+async def mem(ctx):
+    images = os.listdir("images")
+    image = random.choice(images)
+    with open(f'images/{image}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+def get_duck_image_url():
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+@bot.command('duck')
+async def duck(ctx):
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
+
+# Funzione per il gioco di "carta, sasso, forbice"
+@bot.command()
+async def sasso_carta_forbice(ctx, choice):
+    choices = ['carta', 'sasso', 'forbice']
+    bot_choice = random.choice(choices)
+
+    if choice in choices:
+        await ctx.send(f'Hai scelto: {choice}')
+        await ctx.send(f'Il bot ha scelto: {bot_choice}')
+
+        if choice == bot_choice:
+            await ctx.send('È un pareggio!')
+        elif (choice == 'carta' and bot_choice == 'sasso') or \
+             (choice == 'sasso' and bot_choice == 'forbice') or \
+             (choice == 'forbice' and bot_choice == 'carta'):
+            await ctx.send('Hai vinto!')
+        else:
+            await ctx.send('Il bot ha vinto!')
+    else:
+        await ctx.send('Scelta non valida. Le opzioni sono: carta, sasso, forbice.')
+
+@bot.command()
+async def materiali_rinnovabili(ctx):
+    # Ecco come sostituire il nome del file da una variabile!
+    with open(f'testo.txt', 'r') as f:
+            text = f.read()
+    await ctx.send(text)
+
+@bot.command()
+async def materiali_riciclabili(ctx)
+if oggetto in ["bottiglia di plastica", "contenitore di plastica"]:
+    await ctx.send("Questo oggetto si può buttare nel secchio della plastica.")
+elif "etichetta di plastica" in oggetto:
+    await ctx.send("No, questo oggetto va buttato nell'indifferenziata.")
+elif oggetto == "qual'è il secchio della plastica":
+    await ctx.send("Il secchio della plastica è il secchio giallo.")
+elif oggetto == "qual'è il secchio giallo":
+    await ctx.send("Il secchio giallo è per quasi tutti gli oggetti di plastica")
+elif oggetto in ["carta", "oggetto di carta"]:
+    await ctx.send("Questo oggetto si può buttare nel secchio della carta.")
+elif oggetto == "qual'è il secchio della carta":
+    await ctx.send("Il secchio della carta è il secchio blu.")
+elif oggetto == "qual'è il secchio blu":
+    await ctx.send("Il secchio blu è per carta.") 
+elif oggetto in ("frutta", "buccia di frutta" "organico"):
+        await ctx.send("Questo oggetto si può buttare nel secchio dell'organico.")
+elif oggetto == "qual'è il secchio dell'organico":
+    await ctx.send("Il secchio dell'organico è il secchio marrone.")
+elif oggetto == "qual'è il secchio marrone":
+    await ctx.send("Il secchio marrone è per l'organico.")
+else: await ctx.send("Non ho informazioni su questo oggetto.")
+
+# Sostituisci "TOKEN" con il tuo token del bot Discord
+bot.run("MTE1ODc5MjY4MTk4ODgzNzQ2Ng.GCWcQP.5WHd5s1zcO6MRTaKAgtiOOR7EhqWukrO5BSBuI")
